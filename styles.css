@@ -48,3 +48,31 @@ body {
   border-top: 5px solid blue;
   border-bottom: 5px solid blue;
 }
+
+.center button {
+  margin: 15px;
+  border: none;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-color: grey;
+}
+
+.center button:hover {
+  background-color: black;
+  color: gray;
+}
+
+.winner {
+  font-size: 24px;
+}
+
+.turn-display {
+  display: none;
+}
+
+.showturn {
+  font-weight: bold;
+  border: 1px solid gray;
+  padding: 1px 5px;
+}

@@ -1,5 +1,6 @@
 const gameBoard = (() => {
   const _board = document.querySelector(".board");
+  const _showturnDiv = document.querySelector(".showturn");
   const displayBoard = () => {
     let _turn = 0;
     for (let i = 0; i < 3; i++) {
@@ -14,6 +15,7 @@ const gameBoard = (() => {
           if (gamesPlayed % 2 !== 0) {
             if (square.textContent === "") {
               square.textContent = _turn % 2 === 0 ? "x" : "o";
+              _showturnDiv.textContent = _turn % 2 === 0 ? "o" : "x";
               let playerChoice = square.textContent;
               if (playerChoice === "x") {
                 gameFlow.player1Choices.push(squareValue);
@@ -25,6 +27,7 @@ const gameBoard = (() => {
           } else {
             if (square.textContent === "") {
               square.textContent = _turn % 2 === 0 ? "o" : "x";
+              _showturnDiv.textContent = _turn % 2 === 0 ? "x" : "o";
               let playerChoice = square.textContent;
               if (playerChoice === "x") {
                 gameFlow.player1Choices.push(squareValue);
@@ -50,9 +53,17 @@ const gameBoard = (() => {
     }
   };
 
+  const freezeBoard = () => {
+    const allSquares = document.querySelectorAll(".squares");
+    allSquares.forEach(
+      (square) => square.textContent === "" && (square.textContent = " ")
+    );
+  };
+
   return {
     displayBoard,
     clearBoard,
+    freezeBoard,
   };
 })();
 
@@ -65,13 +76,14 @@ const Player = () => {
     playersDiv[1].style.display = "block";
   };
 
-  const name = (player) => {
+  const getName = (player) => {
     const pldisplay = document.querySelector(`.${player}`);
-    const plname = prompt(
+    const plName = prompt(
       `Please enter ${player === "player1" ? "first" : "second"} player name`,
       "Player"
     );
-    pldisplay.textContent = plname;
+    pldisplay.textContent = plName;
+    return plName;
   };
 
   const addScore = (player) => {
@@ -80,7 +92,7 @@ const Player = () => {
     plscore.textContent = _score;
   };
 
-  return { displayPlayers, name, addScore };
+  return { displayPlayers, getName, addScore };
 };
 
 const gameFlow = (() => {
@@ -89,14 +101,16 @@ const gameFlow = (() => {
   const btn = document.getElementById("js-new-game");
   btn.addEventListener("click", () => {
     if (gamesPlayed === 0) {
-      player1.name("player1");
-      player2.name("player2");
+      player1.getName("player1");
+      player2.getName("player2");
       player1.displayPlayers();
+      document.querySelector(".turn-display").style.display = "Block";
     }
     gameBoard.clearBoard();
     gameBoard.displayBoard();
     gamesPlayed++;
     winnerDiv.textContent = "";
+    _clearPlayerChoices();
   });
 
   let player1Choices = [];
@@ -120,19 +134,20 @@ const gameFlow = (() => {
       ) {
         _clearPlayerChoices();
         player1.addScore("player1");
-        winnerDiv.textContent = "Player 1 wins";
+        winnerDiv.textContent = `${
+          document.querySelector(".player1").textContent
+        } wins.`;
+        gameBoard.freezeBoard();
       }
       if (
         _winningCombinations[i].every((val) => player2Choices.includes(val))
       ) {
         _clearPlayerChoices();
         player2.addScore("player2");
-        winnerDiv.textContent = "Player 2 wins";
-        winnerDiv.style.color = "red";
-      }
-      if (player1Choices.length === 5 || player2Choices.length === 5) {
-        _clearPlayerChoices();
-        winnerDiv.textContent = "It's a tie";
+        winnerDiv.textContent = `${
+          document.querySelector(".player2").textContent
+        } wins.`;
+        gameBoard.freezeBoard();
       }
     }
   };
