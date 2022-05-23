@@ -11,17 +11,20 @@
   <body>
     <h1>Tic Tac Toe</h1>
     <div class="content">
-      <div class="player1">
-        <h2>Player1</h2>
+      <div class="player">
+        <h2 class="player1">Player1</h2>
         <div class="piece">x</div>
+        <p>Score: <span class="player1-score">0</span></p>
       </div>
       <div class="center">
         <div class="board"></div>
         <button id="js-new-game">New game</button>
+        <p class="winner"></p>
       </div>
-      <div class="player2">
-        <h2>Player2</h2>
+      <div class="player">
+        <h2 class="player2">Player2</h2>
         <div class="piece">o</div>
+        <p>Score: <span class="player2-score">0</span></p>
       </div>
     </div>
   </body>

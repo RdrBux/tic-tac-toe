@@ -11,7 +11,7 @@ const gameBoard = (() => {
         square.classList.add("squares", `square${squareValue}`);
 
         square.addEventListener("click", function () {
-          if (gamesPlayed % 2 === 0) {
+          if (gamesPlayed % 2 !== 0) {
             if (square.textContent === "") {
               square.textContent = _turn % 2 === 0 ? "x" : "o";
               let playerChoice = square.textContent;
@@ -56,17 +56,47 @@ const gameBoard = (() => {
   };
 })();
 
-const Player = (name) => {
-  const getName = () => {};
-  const playerScore = () => {};
+const Player = () => {
+  let _score = 0;
+
+  const displayPlayers = () => {
+    const playersDiv = document.getElementsByClassName("player");
+    playersDiv[0].style.display = "block";
+    playersDiv[1].style.display = "block";
+  };
+
+  const name = (player) => {
+    const pldisplay = document.querySelector(`.${player}`);
+    const plname = prompt(
+      `Please enter ${player === "player1" ? "first" : "second"} player name`,
+      "Player"
+    );
+    pldisplay.textContent = plname;
+  };
+
+  const addScore = (player) => {
+    const plscore = document.querySelector(`.${player}-score`);
+    _score++;
+    plscore.textContent = _score;
+  };
+
+  return { displayPlayers, name, addScore };
 };
 
 const gameFlow = (() => {
+  const winnerDiv = document.querySelector(".winner");
+
   const btn = document.getElementById("js-new-game");
   btn.addEventListener("click", () => {
+    if (gamesPlayed === 0) {
+      player1.name("player1");
+      player2.name("player2");
+      player1.displayPlayers();
+    }
     gameBoard.clearBoard();
     gameBoard.displayBoard();
     gamesPlayed++;
+    winnerDiv.textContent = "";
   });
 
   let player1Choices = [];
@@ -88,18 +118,21 @@ const gameFlow = (() => {
       if (
         _winningCombinations[i].every((val) => player1Choices.includes(val))
       ) {
-        console.log("player1 winner");
         _clearPlayerChoices();
+        player1.addScore("player1");
+        winnerDiv.textContent = "Player 1 wins";
       }
       if (
         _winningCombinations[i].every((val) => player2Choices.includes(val))
       ) {
-        console.log("player2 winner");
         _clearPlayerChoices();
+        player2.addScore("player2");
+        winnerDiv.textContent = "Player 2 wins";
+        winnerDiv.style.color = "red";
       }
       if (player1Choices.length === 5 || player2Choices.length === 5) {
-        console.log("tie");
         _clearPlayerChoices();
+        winnerDiv.textContent = "It's a tie";
       }
     }
   };
@@ -113,8 +146,10 @@ const gameFlow = (() => {
 })();
 
 let gamesPlayed = 0;
-gameBoard.displayBoard();
+const player1 = Player();
+const player2 = Player();
 
-// TODO:
-// ** clear Players choices when new game is clicked (or hide it during the game)
-// ** add players score under their "piece"
+/* TODO:
+ ** remove input when a player wins
+ ** show who starts
+ */
