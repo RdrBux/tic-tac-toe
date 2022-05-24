@@ -70,6 +70,8 @@ const gameBoard = (() => {
 const Player = () => {
   let _score = 0;
 
+  let name = [];
+
   const displayPlayers = () => {
     const playersDiv = document.getElementsByClassName("player");
     playersDiv[0].style.display = "block";
@@ -83,7 +85,7 @@ const Player = () => {
       "Player"
     );
     pldisplay.textContent = plName;
-    return plName;
+    name.push(plName);
   };
 
   const addScore = (player) => {
@@ -92,7 +94,7 @@ const Player = () => {
     plscore.textContent = _score;
   };
 
-  return { displayPlayers, getName, addScore };
+  return { name: name, displayPlayers, getName, addScore };
 };
 
 const gameFlow = (() => {
@@ -134,9 +136,7 @@ const gameFlow = (() => {
       ) {
         _clearPlayerChoices();
         player1.addScore("player1");
-        winnerDiv.textContent = `${
-          document.querySelector(".player1").textContent
-        } wins.`;
+        winnerDiv.textContent = `${player1.name[0]} wins.`;
         gameBoard.freezeBoard();
       }
       if (
@@ -144,9 +144,7 @@ const gameFlow = (() => {
       ) {
         _clearPlayerChoices();
         player2.addScore("player2");
-        winnerDiv.textContent = `${
-          document.querySelector(".player2").textContent
-        } wins.`;
+        winnerDiv.textContent = `${player2.name[0]} wins.`;
         gameBoard.freezeBoard();
       }
     }
